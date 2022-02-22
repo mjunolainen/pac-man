@@ -1,12 +1,15 @@
 @import url(https://fonts.googleapis.com/css?family=VT323);
-body {
-  background-color: black;
-  cursor: pointer;
+
+/* General */
+* {
+  box-sizing: border-box;
 }
 
+body {
+  background: black;
+}
+/* Game layout */
 #wrapper {
-  height: 100vh;
-  width: 100vw;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -14,71 +17,190 @@ body {
   justify-content: center;
 }
 
-#game-board {
+#game-grid {
+  position: relative;
+  display: inline-grid;
+  background: black;
   border-bottom: 6px inset rgba(119, 118, 118, 0.5);
   border-left: 6px inset rgba(161, 158, 158, 0.5);
   border-right: 6px inset rgba(255, 255, 255, 0.5);
   border-top: 6px inset rgba(255, 255, 255, 0.5);
-  background-color: black;
-  width: 75vmin;
-  height: 75vmin;
-  display: grid;
-  /*grid-template-rows: repeat(28, 1fr);*/
-  grid-template-rows: repeat(30, 1fr);
-  grid-template-columns: repeat(28, 1fr);
+  grid-template-columns: repeat(28, 20px);
+  grid-template-rows: repeat(30, 20px);
 }
 
-#score {
+#score-board {
+  font-family: 'VT323', monospace;
+  background: black;
+  border-bottom: 6px inset rgba(119, 118, 118, 0.5);
+  border-left: 6px inset rgba(161, 158, 158, 0.5);
+  border-right: 6px inset rgba(255, 255, 255, 0.5);
+  border-top: 6px inset rgba(255, 255, 255, 0.5);
+  color: #a4bd33;
+  cursor: pointer;
+  font-size: 2rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 15rem;
+  height: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40vmin;
-  height: 5vmin;
-  border-bottom: 6px inset rgba(119, 118, 118, 0.5);
-  border-left: 6px inset rgba(161, 158, 158, 0.5);
-  border-right: 6px inset rgba(255, 255, 255, 0.5);
-  border-top: 6px inset rgba(255, 255, 255, 0.5);
-  background: black;
-  margin-bottom: 20px;
-  color: #a4bd33;
-  font-family: 'VT323', monospace;
-  font-size: 2rem;
 }
 
-.btn {
+#start-button {
   font-family: 'VT323', monospace;
   background: #881400;
   border-bottom: 6px inset rgba(119, 118, 118, 0.5);
   border-left: 6px inset rgba(161, 158, 158, 0.5);
   border-right: 6px inset rgba(255, 255, 255, 0.5);
   border-top: 6px inset rgba(255, 255, 255, 0.5);
-  box-sizing: border-box;
   color: white;
   cursor: pointer;
-  display: inline-block;
   font-size: 2rem;
   margin: 0.5rem;
   padding: 0.5rem;
+  width: 15rem;
+  height: 4rem;
+
+  box-sizing: border-box;
+  display: inline-block;
   text-transform: uppercase;
-  width: auto;
+  text-align: center;
 }
 
-.btn:hover {
+#start-button:hover {
   background: #a81000;
 }
 
-.pac-dot {
-  background-color: green;
-  border: 7px solid black;
-  border-radius: 50%;
+/* for hiding the start button during the game */
+.hide {
+  visibility: hidden;
+}
+
+.game-status {
+  font-family: 'VT323', monospace;
+  border-bottom: 6px inset rgba(119, 118, 118, 0.5);
+  border-left: 6px inset rgba(161, 158, 158, 0.5);
+  border-right: 6px inset rgba(255, 255, 255, 0.5);
+  border-top: 6px inset rgba(255, 255, 255, 0.5);
+  color: white;
+  cursor: pointer;
+  font-size: 2rem;
+  /*Change width and height to rem */
+  width: 100%;
+  height: 50px;
+  display: flex;
+  position: absolute;
+  top: 40vh;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  background: black;
+}
+
+/* Game squares */
+.square {
+  display: block;
+}
+
+.blank {
+  background: black;
 }
 
 .wall {
   background-color: #f5ba9c;
+  border: 1px solid #b76133;
 }
 
-.power-pill {
+.dot {
+  background: white;
+  border: 8px solid black;
+  border-radius: 50%;
+}
+
+.power-pellet {
   background: white;
   border: 5px solid black;
   border-radius: 50%;
+}
+
+/* Characters */
+
+.ghost {
+  position: relative;
+  border-radius: 10px 10px 2px 2px;
+  border: none;
+}
+
+.ghost::before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 2px;
+  height: 3px;
+  background: black;
+  border-radius: 50%;
+  left: 1px;
+  top: 5px;
+  border: 2px solid white;
+}
+
+.ghost::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 2px;
+  height: 3px;
+  background: black;
+  border-radius: 50%;
+  right: 4px;
+  top: 5px;
+  border: 2px solid white;
+}
+
+.blinky {
+  background: red;
+}
+
+.pinky {
+  background: pink;
+}
+
+.inky {
+  background: cyan;
+}
+
+.clyde {
+  background: orange;
+}
+
+.pac-man {
+  background: yellow;
+  border: none;
+  border-radius: 50%;
+  clip-path: polygon(
+    0 0,
+    20px 0,
+    20px -5px,
+    8px 10px,
+    20px 25px,
+    20px 20px,
+    0 20px
+  );
+  animation: chew 0.2s linear forwards infinite;
+}
+/* pac-man animation */
+@keyframes chew {
+  50% {
+    clip-path: polygon(
+      0 0,
+      20px 0,
+      20px 10px,
+      8px 10px,
+      20px 10px,
+      20px 20px,
+      0 20px
+    );
+  }
 }
