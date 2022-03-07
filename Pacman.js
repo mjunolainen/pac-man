@@ -1,4 +1,5 @@
 import { WIDTH, HEIGHT } from './setup.js';
+
 class Pacman {
   constructor(speed, startPosition) {
     this.position = startPosition;
@@ -53,7 +54,6 @@ class Pacman {
         break;
     }
     squares[this.position].classList.add('pac-man');
-    console.log(this.direction);
   }
 }
 
