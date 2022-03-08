@@ -1,56 +1,90 @@
-import { WIDTH } from './setup.js';
-import { createBoard } from './board.js';
+import {
+  createBoard,
+  startButton,
+  dotCount,
+  squares,
+  scoreTable,
+} from './board.js';
+import { POWER_PELLET_TIME } from './setup.js';
 import Pacman from './Pacman.js';
 import Ghost from './Ghost.js';
-import ghost from './Ghost.js';
+import { checkCollision, gameWin } from './utilities.js';
 
 // Setup
 let score = 0;
-let timer = null;
+let lastTime;
+let powerPelletActive = false;
+let powerPelletTimer = null;
+let dotsLeft = dotCount;
+// Create game board, pac-man and ghosts
+createBoard();
+export const pacman = new Pacman(20, 657);
+const ghosts = [
+  new Ghost(13, 347, 'blinky'),
+  new Ghost(11, 376, 'inky'),
+  new Ghost(9, 405, 'pinky'),
+  new Ghost(8, 434, 'clyde'),
+];
 
-const gameGrid = document.querySelector('#game-grid');
-const scoreTable = document.querySelector('#score-board');
-const startButton = document.querySelector('#start-button');
-const squares = [];
-
-// Create game board
-createBoard(gameGrid, squares);
-
-function gameLoop(pacman, ghosts) {
-  ghosts.forEach(ghost => moveGhosts(ghost, squares));
-  function moveGhosts(ghost, squares) {
-    const directions = [-1, +1, -WIDTH, +WIDTH];
-    let direction = directions[Math.floor(Math.random() * directions.length)];
-
-    if (
-      !squares[ghost.position + direction].classList.contains('ghost') &&
-      !squares[ghost.position + direction].classList.contains('wall')
-    ) {
-      ghost.startPosition = ghost.position;
-      squares[ghost.position].classList.remove(
-        'ghost',
-        'scared-ghost',
-        ghost.name
-      );
-      ghost.position += direction;
-      ghost.direction = ghost.startPosition - ghost.position;
-      squares[ghost.position].classList.add('ghost', ghost.name);
-    }
+export function gameLoop(currentTime) {
+  if (lastTime === null) {
+    lastTime = currentTime;
+    window.requestAnimationFrame(gameLoop);
+    return;
   }
+  //const delta = currentTime - lastTime; Is this needed?
+  // move pac-man
+  pacman.movePacman();
+  // check collision
+  checkCollision(pacman, ghosts);
+  // move ghost
+  ghosts.forEach(ghost => ghost.moveGhost());
+  // check collision
+  checkCollision(pacman, ghosts);
+  // check if pac-man eats a dot
+  if (squares[pacman.position].classList.contains('dot')) {
+    squares[pacman.position].classList.remove('dot');
+    dotsLeft--;
+    score += 10;
+  }
+  // check if pac-ma eats a power-pellet
+  if (squares[pacman.position].classList.contains('power-pellet')) {
+    squares[pacman.position].classList.remove('power-pellet');
+    pacman.powerPellet = true;
+    score += 50;
+
+    clearTimeout(powerPelletTimer);
+    powerPelletTimer = setTimeout(
+      () => (pacman.powerPellet = false),
+      POWER_PELLET_TIME
+    );
+  }
+
+  // Change ghost scare mode depending on power pill
+  if (pacman.powerPellet) {
+    ghosts.forEach(ghost => squares[ghost.position].classList.add('scared'));
+  }
+
+  scoreTable.textContent = String(score);
+  lastTime = currentTime;
+  requestAnimationFrame(gameLoop);
 }
 
 function startGame() {
+  //gameWin = false;
+  powerPelletActive = false;
   score = 0;
-  const pacman = new Pacman(2, 657);
-  squares[pacman.position].classList.add('pac-man');
+  pacman.setupPacman();
+  ghosts.forEach(ghost => {
+    ghost.setupGhost();
+  });
   startButton.classList.add('hide');
-  const ghosts = [
-    new Ghost(2, 347, 'blinky'),
-    new Ghost(3, 376, 'inky'),
-    new Ghost(4, 405, 'pinky'),
-    new Ghost(5, 434, 'clyde'),
-  ];
-  document.addEventListener('keyup', e => pacman.movePacman(e, squares));
-  timer = setInterval(() => gameLoop(pacman, ghosts), 80);
+  document.addEventListener('keydown', e => pacman.handleKeyInput(e));
+  window.requestAnimationFrame(gameLoop);
 }
-startButton.addEventListener('click', startGame);
+startButton.addEventListener('click', startGame, { once: true });
+
+// TODO check collision
+// TODO check winner / game over
+// TODO show game status
+// TODO check requirements

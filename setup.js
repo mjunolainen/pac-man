@@ -1,5 +1,6 @@
 export const WIDTH = 28; // 28 x 30 = 840 squares
 export const HEIGHT = 30;
+export const POWER_PELLET_TIME = 10000; //ms
 
 // Grid layout and what is on a specific square
 //prettier-ignore
