@@ -44,7 +44,7 @@ class Pacman {
     squares[this.position].classList.remove('pac-man');
     squares[this.position].style.transform = `rotate(0deg)`;
     if (!e.repeat) {
-      switch (e.key) {
+      switch (e.code) {
         case 'ArrowLeft':
           this.keyDirection = -1;
           this.rotation = 180;
