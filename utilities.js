@@ -5,7 +5,6 @@ import ghost from './Ghost.js';
 export function gameOver(pacman, frameId) {
   // this doesn't work
   document.removeEventListener('keydown', e => pacman.handleKeyInput(e));
-
   window.cancelAnimationFrame(frameId);
   showGameStatus(gameWin);
   startButton.classList.remove('hide');

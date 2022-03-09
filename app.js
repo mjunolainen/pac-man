@@ -18,6 +18,7 @@ let powerPelletActive = false;
 let powerPelletTimer = null;
 export let gameWin = false;
 let reqAnimationId;
+let pause = false;
 // Create game board, pac-man and ghosts
 createBoard();
 let dotsLeft = dotCount;
@@ -39,42 +40,51 @@ export function gameLoop(currentTime) {
   lastTime = currentTime;
   reqAnimationId = requestAnimationFrame(gameLoop);
 
-  // Move Pac-man
-  pacman.movePacman();
-  // Check collision
-  checkCollision(pacman, ghosts, reqAnimationId);
-  // Move ghosts
-  ghosts.forEach(ghost => ghost.moveGhost());
-  // Check collision
-  checkCollision(pacman, ghosts);
-  // Check if pac-man eats a dot
-  if (squares[pacman.position].classList.contains('dot')) {
-    squares[pacman.position].classList.remove('dot');
-    dotsLeft--;
-    score += 10;
-  }
-  // Check if pac-ma eats a power-pellet
-  if (squares[pacman.position].classList.contains('power-pellet')) {
-    squares[pacman.position].classList.remove('power-pellet');
-    pacman.powerPellet = true;
-    score += 50;
+  if (!pause) {
+    // Move Pac-man
+    pacman.movePacman();
+    // Check collision
+    checkCollision(pacman, ghosts, reqAnimationId);
+    // Move ghosts
+    ghosts.forEach(ghost => ghost.moveGhost());
+    // Check collision
+    checkCollision(pacman, ghosts);
+    // Check if pac-man eats a dot
+    if (squares[pacman.position].classList.contains('dot')) {
+      squares[pacman.position].classList.remove('dot');
+      dotsLeft--;
+      score += 10;
+    }
+    // Check if pac-ma eats a power-pellet
+    if (squares[pacman.position].classList.contains('power-pellet')) {
+      squares[pacman.position].classList.remove('power-pellet');
+      pacman.powerPellet = true;
+      score += 50;
 
-    clearTimeout(powerPelletTimer);
-    powerPelletTimer = setTimeout(
-      () => (pacman.powerPellet = false),
-      POWER_PELLET_TIME
+      clearTimeout(powerPelletTimer);
+      powerPelletTimer = setTimeout(
+        () => (pacman.powerPellet = false),
+        POWER_PELLET_TIME
+      );
+    }
+    // Change ghost scare mode
+    if (pacman.powerPellet) {
+      ghosts.forEach(ghost => squares[ghost.position].classList.add('scared'));
+    }
+    if (dotsLeft === 0) {
+      gameWin = true;
+      gameOver(pacman, reqAnimationId);
+    }
+    // Update score
+    scoreTable.textContent = String(score);
+  } else {
+    startButton.classList.remove('hide');
+    startButton.textContent = 'New game?';
+    startButton.addEventListener(
+      'click',
+      window.location.reload.bind(window.location)
     );
   }
-  // Change ghost scare mode
-  if (pacman.powerPellet) {
-    ghosts.forEach(ghost => squares[ghost.position].classList.add('scared'));
-  }
-  if (dotsLeft === 0) {
-    gameWin = true;
-    gameOver(pacman, reqAnimationId);
-  }
-  // Update score
-  scoreTable.textContent = String(score);
 }
 
 function startGame() {
@@ -87,6 +97,14 @@ function startGame() {
   });
   startButton.classList.add('hide');
   document.addEventListener('keydown', e => pacman.handleKeyInput(e));
+  document.addEventListener('keydown', ev => {
+    if (ev.code === 'Space') {
+      pause = !pause;
+    }
+    if (!pause) {
+      startButton.classList.add('hide');
+    }
+  });
   window.requestAnimationFrame(gameLoop);
 }
 startButton.addEventListener('click', startGame);
