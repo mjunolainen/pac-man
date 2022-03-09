@@ -1,6 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=VT323);
 
-/* General */
 * {
   box-sizing: border-box;
 }
@@ -8,7 +7,7 @@
 body {
   background: black;
 }
-/* Game layout */
+
 #wrapper {
   position: relative;
   display: flex;
@@ -73,7 +72,6 @@ body {
   background: #a81000;
 }
 
-/* for hiding the start button during the game */
 .hide {
   visibility: hidden;
 }
@@ -99,7 +97,6 @@ body {
   background: black;
 }
 
-/* Game squares */
 .square {
   display: block;
 }
@@ -124,8 +121,6 @@ body {
   border: 5px solid black;
   border-radius: 50%;
 }
-
-/* Characters */
 
 .ghost {
   position: relative;
@@ -193,7 +188,7 @@ body {
   );
   animation: chew 0.2s linear forwards infinite;
 }
-/* pac-man animation */
+
 @keyframes chew {
   50% {
     clip-path: polygon(

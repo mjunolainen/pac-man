@@ -5,17 +5,15 @@ class Ghost {
   constructor(speed = 2, startPosition, name) {
     this.name = name;
     this.startPosition = startPosition;
+    this.previousPosition = startPosition;
     this.position = startPosition;
     this.direction = -WIDTH;
     this.speed = speed;
     this.timer = 0;
-    this.isScared = false;
   }
-
   setupGhost() {
     squares[this.position].classList.add('ghost', `${this.name}`);
   }
-
   shouldMove() {
     if (this.timer === this.speed) {
       this.timer = 0;
@@ -31,7 +29,7 @@ class Ghost {
         !squares[this.position + this.direction].classList.contains('ghost') &&
         !squares[this.position + this.direction].classList.contains('wall')
       ) {
-        this.startPosition = this.position;
+        this.previousPosition = this.position;
         squares[this.position].classList.remove(
           'ghost',
           'scared',
@@ -48,14 +46,14 @@ class Ghost {
         !squares[this.position + direction].classList.contains('ghost') &&
         !squares[this.position + direction].classList.contains('wall')
       ) {
-        this.startPosition = this.position;
+        this.previousPosition = this.position;
         squares[this.position].classList.remove(
           'ghost',
           'scared',
           `${this.name}`
         );
         this.position += direction;
-        this.direction = this.position - this.startPosition;
+        this.direction = this.position - this.previousPosition;
         squares[this.position].classList.add('ghost', `${this.name}`);
       }
     }

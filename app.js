@@ -5,49 +5,55 @@ import {
   squares,
   scoreTable,
 } from './board.js';
-import { POWER_PELLET_TIME } from './setup.js';
+import { POWER_PELLET_TIME, GAME_SPEED } from './setup.js';
 import Pacman from './Pacman.js';
 import Ghost from './Ghost.js';
-import { checkCollision, gameWin } from './utilities.js';
+import { checkCollision, gameOver } from './utilities.js';
 
 // Setup
-let score = 0;
+export let score = 0;
+export const addScoreEatGhost = () => (score += 100);
 let lastTime;
 let powerPelletActive = false;
 let powerPelletTimer = null;
-let dotsLeft = dotCount;
+export let gameWin = false;
+let reqAnimationId;
 // Create game board, pac-man and ghosts
 createBoard();
+let dotsLeft = dotCount;
 export const pacman = new Pacman(20, 657);
-const ghosts = [
+export const ghosts = [
   new Ghost(13, 347, 'blinky'),
   new Ghost(11, 376, 'inky'),
   new Ghost(9, 405, 'pinky'),
   new Ghost(8, 434, 'clyde'),
 ];
 
+// Game loop
 export function gameLoop(currentTime) {
   if (lastTime === null) {
     lastTime = currentTime;
     window.requestAnimationFrame(gameLoop);
     return;
   }
-  //const delta = currentTime - lastTime; Is this needed?
-  // move pac-man
+  lastTime = currentTime;
+  reqAnimationId = requestAnimationFrame(gameLoop);
+
+  // Move Pac-man
   pacman.movePacman();
-  // check collision
-  checkCollision(pacman, ghosts);
-  // move ghost
+  // Check collision
+  checkCollision(pacman, ghosts, reqAnimationId);
+  // Move ghosts
   ghosts.forEach(ghost => ghost.moveGhost());
-  // check collision
+  // Check collision
   checkCollision(pacman, ghosts);
-  // check if pac-man eats a dot
+  // Check if pac-man eats a dot
   if (squares[pacman.position].classList.contains('dot')) {
     squares[pacman.position].classList.remove('dot');
     dotsLeft--;
     score += 10;
   }
-  // check if pac-ma eats a power-pellet
+  // Check if pac-ma eats a power-pellet
   if (squares[pacman.position].classList.contains('power-pellet')) {
     squares[pacman.position].classList.remove('power-pellet');
     pacman.powerPellet = true;
@@ -59,19 +65,20 @@ export function gameLoop(currentTime) {
       POWER_PELLET_TIME
     );
   }
-
-  // Change ghost scare mode depending on power pill
+  // Change ghost scare mode
   if (pacman.powerPellet) {
     ghosts.forEach(ghost => squares[ghost.position].classList.add('scared'));
   }
-
+  if (dotsLeft === 0) {
+    gameWin = true;
+    gameOver(pacman, reqAnimationId);
+  }
+  // Update score
   scoreTable.textContent = String(score);
-  lastTime = currentTime;
-  requestAnimationFrame(gameLoop);
 }
 
 function startGame() {
-  //gameWin = false;
+  gameWin = false;
   powerPelletActive = false;
   score = 0;
   pacman.setupPacman();
@@ -82,9 +89,8 @@ function startGame() {
   document.addEventListener('keydown', e => pacman.handleKeyInput(e));
   window.requestAnimationFrame(gameLoop);
 }
-startButton.addEventListener('click', startGame, { once: true });
+startButton.addEventListener('click', startGame);
 
-// TODO check collision
-// TODO check winner / game over
-// TODO show game status
-// TODO check requirements
+// TODO pause / resume / start new game
+// TODO removEeventListener in utilities doesn't work
+// TODO the speed of pac-man varies when changing direction
