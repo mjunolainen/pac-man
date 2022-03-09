@@ -109,6 +109,5 @@ function startGame() {
 }
 startButton.addEventListener('click', startGame);
 
-// TODO pause / resume / start new game
-// TODO removEeventListener in utilities doesn't work
+// TODO removEeventListeners in utilities doesn't work
 // TODO the speed of pac-man varies when changing direction
