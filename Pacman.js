@@ -1,8 +1,17 @@
-import { WIDTH } from './setup.js';
-import { squares } from './board.js';
-import { gameWin, pause } from './app.js';
+import { WIDTH } from "./setup.js";
+import { squares } from "./board.js";
+import { gameOver, gameOverBool, pause } from "./utilities.js";
+import {
+  addScoreEatDot,
+  addScoreEatGhost,
+  addScoreEatPowerPellet,
+  pacman,
+  powerPelletExpiring,
+  powerPelletTimer,
+  reduceDots,
+} from "./app.js";
 
-class Pacman {
+export class Pacman {
   constructor(speed, startPosition) {
     this.position = startPosition;
     this.speed = speed;
@@ -14,7 +23,7 @@ class Pacman {
   }
 
   setupPacman() {
-    squares[this.position].classList.add('pac-man');
+    squares[this.position].classList.add("pac-man");
   }
 
   shouldMove() {
@@ -29,10 +38,10 @@ class Pacman {
   movePacman() {
     if (this.shouldMove()) {
       if (this.checkObstruction(this.keyDirection)) {
-        squares[this.position].classList.remove('pac-man');
+        squares[this.position].classList.remove("pac-man");
         squares[this.position].style.transform = `rotate(0deg)`;
         this.changePositionDirection(this.keyDirection, this.rotation);
-        squares[this.position].classList.add('pac-man');
+        squares[this.position].classList.add("pac-man");
         squares[this.position].style.transform = `rotate(${this.rotation}deg)`;
       }
     }
@@ -40,34 +49,33 @@ class Pacman {
 
   handleKeyInput(e) {
     e.preventDefault();
-    if (!pause) {
-      squares[this.position].classList.remove('pac-man');
+    if (!pause && !gameOverBool) {
+      squares[this.position].classList.remove("pac-man");
       squares[this.position].style.transform = `rotate(0deg)`;
       if (!e.repeat) {
         switch (e.code) {
-          case 'ArrowLeft':
+          case "ArrowLeft":
             this.keyDirection = -1;
             this.rotation = 180;
             if (this.checkObstruction()) {
               this.changePositionDirection();
-              console.log('left');
             }
             break;
-          case 'ArrowUp':
+          case "ArrowUp":
             this.keyDirection = -WIDTH;
             this.rotation = 270;
             if (this.checkObstruction()) {
               this.changePositionDirection();
             }
             break;
-          case 'ArrowRight':
+          case "ArrowRight":
             this.keyDirection = +1;
             this.rotation = 0;
             if (this.checkObstruction()) {
               this.changePositionDirection();
             }
             break;
-          case 'ArrowDown':
+          case "ArrowDown":
             this.keyDirection = +WIDTH;
             this.rotation = 90;
             if (this.checkObstruction()) {
@@ -75,7 +83,7 @@ class Pacman {
             }
             break;
         }
-        squares[this.position].classList.add('pac-man');
+        squares[this.position].classList.add("pac-man");
         squares[this.position].style.transform = `rotate(${this.rotation}deg)`;
       }
     }
@@ -83,9 +91,9 @@ class Pacman {
 
   checkObstruction() {
     return (
-      !squares[this.position + this.keyDirection].classList.contains('wall') &&
+      !squares[this.position + this.keyDirection].classList.contains("wall") &&
       !squares[this.position + this.keyDirection].classList.contains(
-        'ghost-lair'
+        "ghost-lair"
       )
     );
   }
@@ -94,5 +102,50 @@ class Pacman {
     this.position += this.keyDirection;
     this.direction = this.position + this.keyDirection;
   }
+
+  checkCollision(ghosts, frameId) {
+    const collision = ghosts.find((ghost) => this.position === ghost.position);
+    if (collision) {
+      if (this.powerPellet) {
+        squares[collision.position].classList.remove(
+          "ghost",
+          "scared",
+          `${collision.name}`
+        );
+        collision.position = collision.startPosition;
+        addScoreEatGhost();
+      } else {
+        squares[this.position].classList.remove("pac-man");
+        squares[this.position].style.transform = `rotate(0deg)`;
+        ghosts.forEach((ghost) => {
+          squares[ghost.position].classList.remove(
+            "ghost",
+            "scared",
+            `${ghost.name}`
+          );
+        });
+        gameOver(this, frameId);
+      }
+    }
+  }
+
+  eatDot() {
+    if (squares[this.position].classList.contains("dot")) {
+      squares[this.position].classList.remove("dot");
+      //dotsLeft--;
+      addScoreEatDot();
+      reduceDots();
+    }
+  }
+
+  eatPowerPellet() {
+    if (squares[this.position].classList.contains("power-pellet")) {
+      squares[this.position].classList.remove("power-pellet");
+      pacman.powerPellet = true;
+      addScoreEatPowerPellet();
+
+      clearTimeout(powerPelletTimer);
+      powerPelletExpiring();
+    }
+  }
 }
-export default Pacman;
