@@ -8,7 +8,7 @@ const pacman = game.pacman;
 const ghosts = game.ghosts;
 
 // Game loop
-export function gameLoop(currentTime) {
+function gameLoop(currentTime) {
   if (game.lastTime === null) {
     game.lastTime = currentTime;
     window.requestAnimationFrame(gameLoop);
