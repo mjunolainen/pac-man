@@ -18,6 +18,8 @@ export class Pacman {
     squares[this.position].classList.add("pac-man");
   }
 
+  // Determine if a key has been pressed at the beginning of the game or
+  // if pac-man should move based on the input speed
   shouldMove() {
     if (!this.direction) return;
     if (this.timer === this.speed) {

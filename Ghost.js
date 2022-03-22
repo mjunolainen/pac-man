@@ -16,6 +16,7 @@ export class Ghost {
     squares[this.position].classList.add("ghost", `${this.name}`);
   }
 
+  // Determine if the ghost should move based on the input speed
   shouldMove() {
     if (this.timer === this.speed) {
       this.timer = 0;
