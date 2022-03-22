@@ -1,5 +1,6 @@
 import { WIDTH } from './setup.js';
 import { squares } from './board.js';
+import { gameWin, pause } from './app.js';
 
 class Pacman {
   constructor(speed, startPosition) {
@@ -38,44 +39,45 @@ class Pacman {
   }
 
   handleKeyInput(e) {
-    // prevent the screen from moving up and down with the default key actions
     e.preventDefault();
-    // clear pac-man and div rotation from current position
-    squares[this.position].classList.remove('pac-man');
-    squares[this.position].style.transform = `rotate(0deg)`;
-    if (!e.repeat) {
-      switch (e.code) {
-        case 'ArrowLeft':
-          this.keyDirection = -1;
-          this.rotation = 180;
-          if (this.checkObstruction()) {
-            this.changePositionDirection();
-          }
-          break;
-        case 'ArrowUp':
-          this.keyDirection = -WIDTH;
-          this.rotation = 270;
-          if (this.checkObstruction()) {
-            this.changePositionDirection();
-          }
-          break;
-        case 'ArrowRight':
-          this.keyDirection = +1;
-          this.rotation = 0;
-          if (this.checkObstruction()) {
-            this.changePositionDirection();
-          }
-          break;
-        case 'ArrowDown':
-          this.keyDirection = +WIDTH;
-          this.rotation = 90;
-          if (this.checkObstruction()) {
-            this.changePositionDirection();
-          }
-          break;
+    if (!pause) {
+      squares[this.position].classList.remove('pac-man');
+      squares[this.position].style.transform = `rotate(0deg)`;
+      if (!e.repeat) {
+        switch (e.code) {
+          case 'ArrowLeft':
+            this.keyDirection = -1;
+            this.rotation = 180;
+            if (this.checkObstruction()) {
+              this.changePositionDirection();
+              console.log('left');
+            }
+            break;
+          case 'ArrowUp':
+            this.keyDirection = -WIDTH;
+            this.rotation = 270;
+            if (this.checkObstruction()) {
+              this.changePositionDirection();
+            }
+            break;
+          case 'ArrowRight':
+            this.keyDirection = +1;
+            this.rotation = 0;
+            if (this.checkObstruction()) {
+              this.changePositionDirection();
+            }
+            break;
+          case 'ArrowDown':
+            this.keyDirection = +WIDTH;
+            this.rotation = 90;
+            if (this.checkObstruction()) {
+              this.changePositionDirection();
+            }
+            break;
+        }
+        squares[this.position].classList.add('pac-man');
+        squares[this.position].style.transform = `rotate(${this.rotation}deg)`;
       }
-      squares[this.position].classList.add('pac-man');
-      squares[this.position].style.transform = `rotate(${this.rotation}deg)`;
     }
   }
 

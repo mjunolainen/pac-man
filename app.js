@@ -5,7 +5,7 @@ import {
   squares,
   scoreTable,
 } from './board.js';
-import { POWER_PELLET_TIME, GAME_SPEED } from './setup.js';
+import { POWER_PELLET_TIME } from './setup.js';
 import Pacman from './Pacman.js';
 import Ghost from './Ghost.js';
 import { checkCollision, gameOver } from './utilities.js';
@@ -18,7 +18,7 @@ let powerPelletActive = false;
 let powerPelletTimer = null;
 export let gameWin = false;
 let reqAnimationId;
-let pause = false;
+export let pause = false;
 // Create game board, pac-man and ghosts
 createBoard();
 let dotsLeft = dotCount;
@@ -78,8 +78,8 @@ export function gameLoop(currentTime) {
     // Update score
     scoreTable.textContent = String(score);
   } else {
-    startButton.classList.remove('hide');
     startButton.textContent = 'New game?';
+    startButton.classList.remove('hide');
     startButton.addEventListener(
       'click',
       window.location.reload.bind(window.location)
@@ -88,9 +88,13 @@ export function gameLoop(currentTime) {
 }
 
 function startGame() {
-  gameWin = false;
-  powerPelletActive = false;
   score = 0;
+  lastTime = null;
+  powerPelletActive = false;
+  powerPelletTimer = null;
+  gameWin = false;
+  pause = false;
+  reqAnimationId = null;
   pacman.setupPacman();
   ghosts.forEach(ghost => {
     ghost.setupGhost();
@@ -105,9 +109,11 @@ function startGame() {
       startButton.classList.add('hide');
     }
   });
+
   window.requestAnimationFrame(gameLoop);
 }
 startButton.addEventListener('click', startGame);
 
-// TODO removEeventListeners in utilities doesn't work
+//TODO new Game class
+//TODO game over disable key input
 // TODO the speed of pac-man varies when changing direction
