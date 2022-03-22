@@ -1,15 +1,8 @@
 import { WIDTH } from "./setup.js";
 import { squares } from "./board.js";
 import { gameOver, gameOverBool, pause } from "./utilities.js";
-import {
-  addScoreEatDot,
-  addScoreEatGhost,
-  addScoreEatPowerPellet,
-  pacman,
-  powerPelletExpiring,
-  powerPelletTimer,
-  reduceDots,
-} from "./app.js";
+import { game } from "./app.js";
+//import { pacman } from "./app.js";
 
 export class Pacman {
   constructor(speed, startPosition) {
@@ -113,7 +106,7 @@ export class Pacman {
           `${collision.name}`
         );
         collision.position = collision.startPosition;
-        addScoreEatGhost();
+        game.score += 100;
       } else {
         squares[this.position].classList.remove("pac-man");
         squares[this.position].style.transform = `rotate(0deg)`;
@@ -132,20 +125,18 @@ export class Pacman {
   eatDot() {
     if (squares[this.position].classList.contains("dot")) {
       squares[this.position].classList.remove("dot");
-      //dotsLeft--;
-      addScoreEatDot();
-      reduceDots();
+      game.score += 10;
+      game.dotCount -= 1;
     }
   }
 
   eatPowerPellet() {
     if (squares[this.position].classList.contains("power-pellet")) {
       squares[this.position].classList.remove("power-pellet");
-      pacman.powerPellet = true;
-      addScoreEatPowerPellet();
-
-      clearTimeout(powerPelletTimer);
-      powerPelletExpiring();
+      this.powerPellet = true;
+      game.score += 50;
+      clearTimeout(game.powerPelletTimer);
+      game.powerPelletExpiring();
     }
   }
 }
