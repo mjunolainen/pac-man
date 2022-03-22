@@ -14,10 +14,10 @@ export class Game {
     this.dotCount = countDots();
     this.pacman = new Pacman(20, 657);
     this.ghosts = [
-      new Ghost(13, 347, "blinky"),
+      new Ghost(12, 347, "blinky"),
       new Ghost(11, 376, "inky"),
-      new Ghost(9, 405, "pinky"),
-      new Ghost(8, 434, "clyde"),
+      new Ghost(10, 405, "pinky"),
+      new Ghost(9, 434, "clyde"),
     ];
   }
 

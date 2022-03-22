@@ -2,7 +2,6 @@ import { WIDTH } from "./setup.js";
 import { squares } from "./board.js";
 import { gameOver, gameOverBool, pause } from "./utilities.js";
 import { game } from "./app.js";
-//import { pacman } from "./app.js";
 
 export class Pacman {
   constructor(speed, startPosition) {
@@ -51,28 +50,28 @@ export class Pacman {
             this.keyDirection = -1;
             this.rotation = 180;
             if (this.checkObstruction()) {
-              this.changePositionDirection();
+              this.direction = this.position + this.keyDirection;
             }
             break;
           case "ArrowUp":
             this.keyDirection = -WIDTH;
             this.rotation = 270;
             if (this.checkObstruction()) {
-              this.changePositionDirection();
+              this.direction = this.position + this.keyDirection;
             }
             break;
           case "ArrowRight":
             this.keyDirection = +1;
             this.rotation = 0;
             if (this.checkObstruction()) {
-              this.changePositionDirection();
+              this.direction = this.position + this.keyDirection;
             }
             break;
           case "ArrowDown":
             this.keyDirection = +WIDTH;
             this.rotation = 90;
             if (this.checkObstruction()) {
-              this.changePositionDirection();
+              this.direction = this.position + this.keyDirection;
             }
             break;
         }
