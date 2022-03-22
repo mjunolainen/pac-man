@@ -1,5 +1,5 @@
-import { gameWin } from "./app.js";
 import { gameGrid, startButton } from "./board.js";
+import { game } from "./app.js";
 export let gameOverBool = false;
 export let pause = false;
 
@@ -15,7 +15,7 @@ export function pauseGame(ev) {
 export function gameOver(pacman, frameId) {
   gameOverBool = true;
   window.cancelAnimationFrame(frameId);
-  showGameStatus(gameWin);
+  showGameStatus(game.gameWin);
   startButton.classList.remove("hide");
   startButton.textContent = "New game?";
   startButton.addEventListener(
