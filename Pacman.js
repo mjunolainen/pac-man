@@ -42,13 +42,13 @@ export class Pacman {
   }
 
   handleKeyInput(e) {
-    e.preventDefault();
     if (!pause && !gameOverBool) {
       squares[this.position].classList.remove("pac-man");
       squares[this.position].style.transform = `rotate(0deg)`;
       if (!e.repeat) {
         switch (e.code) {
           case "ArrowLeft":
+            e.preventDefault();
             this.keyDirection = -1;
             this.rotation = 180;
             if (this.checkObstruction()) {
@@ -56,6 +56,7 @@ export class Pacman {
             }
             break;
           case "ArrowUp":
+            e.preventDefault();
             this.keyDirection = -WIDTH;
             this.rotation = 270;
             if (this.checkObstruction()) {
@@ -63,6 +64,7 @@ export class Pacman {
             }
             break;
           case "ArrowRight":
+            e.preventDefault();
             this.keyDirection = +1;
             this.rotation = 0;
             if (this.checkObstruction()) {
@@ -70,6 +72,7 @@ export class Pacman {
             }
             break;
           case "ArrowDown":
+            e.preventDefault();
             this.keyDirection = +WIDTH;
             this.rotation = 90;
             if (this.checkObstruction()) {

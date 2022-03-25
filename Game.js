@@ -1,4 +1,4 @@
-import { countDots, createBoard } from "./board.js";
+import { countDots, createBoard, squares, startButton } from "./board.js";
 import { POWER_PELLET_TIME } from "./setup.js";
 import { Pacman } from "./Pacman.js";
 import { Ghost } from "./Ghost.js";
@@ -27,4 +27,17 @@ export class Game {
       POWER_PELLET_TIME
     );
   };
+
+  resetGame() {
+    squares[this.pacman.position].classList.remove("pac-man");
+    squares[this.pacman.position].style.transform = `rotate(0deg)`;
+
+    this.ghosts.forEach((ghost) => {
+      squares[ghost.position].classList.remove(
+        "ghost",
+        "scared",
+        `${ghost.name}`
+      );
+    });
+  }
 }
