@@ -61,7 +61,22 @@ function startGame() {
   window.requestAnimationFrame(gameLoop);
 }
 
-document.addEventListener("keydown", (e) => pacman.handleKeyInput(e));
-document.addEventListener("keydown", (ev) => pauseGame(ev));
+document.addEventListener("keyup", (e) => pacman.handleKeyInput(e));
+document.addEventListener("keyup", (ev) => pauseGame(ev));
 
 startButton.addEventListener("click", startGame);
+
+let startTime = Date.now();
+let frame = 0;
+
+function tick() {
+  let time = Date.now();
+  frame++;
+  if (time - startTime > 1000) {
+    console.log((frame / ((time - startTime) / 1000)).toFixed(1));
+    startTime = time;
+    frame = 0;
+  }
+  window.requestAnimationFrame(tick);
+}
+tick();
