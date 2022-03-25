@@ -66,6 +66,7 @@ document.addEventListener("keyup", (ev) => pauseGame(ev));
 
 startButton.addEventListener("click", startGame);
 
+// FPS meter
 let startTime = Date.now();
 let frame = 0;
 
