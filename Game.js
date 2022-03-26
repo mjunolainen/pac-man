@@ -10,6 +10,8 @@ export class Game {
     this.reqAnimationId = null;
     this.gameWin = false;
     this.gameStarted = false;
+    this.pause = false;
+    this.gameOverBool = false;
     this.score = 0;
     this.powerPelletTimer = null;
     this.dotCount = countDots();
@@ -30,15 +32,21 @@ export class Game {
   };
 
   resetGame() {
-    squares[this.pacman.position].classList.remove("pac-man");
-    squares[this.pacman.position].style.transform = `rotate(0deg)`;
-
-    this.ghosts.forEach((ghost) => {
-      squares[ghost.position].classList.remove(
-        "ghost",
-        "scared",
-        `${ghost.name}`
-      );
-    });
+    for (const square of squares) {
+      if (square.classList.contains("pac-man")) {
+        square.classList.remove("pac-man");
+        square.style.transform = `rotate(0deg)`;
+      }
+      if (square.classList.contains("ghost")) {
+        square.classList.remove(
+          "ghost",
+          "scared",
+          "blinky",
+          "inky",
+          "pinky",
+          "clyde"
+        );
+      }
+    }
   }
 }

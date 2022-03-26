@@ -1,6 +1,6 @@
 import { WIDTH } from "./setup.js";
 import { squares } from "./board.js";
-import { gameOver, gameOverBool, pause } from "./utilities.js";
+import { gameOver } from "./utilities.js";
 import { game } from "./app.js";
 
 export class Pacman {
@@ -42,7 +42,7 @@ export class Pacman {
   }
 
   handleKeyInput(e) {
-    if (!pause && !gameOverBool) {
+    if (!game.pause && !game.gameOverBool) {
       squares[this.position].classList.remove("pac-man");
       squares[this.position].style.transform = `rotate(0deg)`;
       if (!e.repeat) {

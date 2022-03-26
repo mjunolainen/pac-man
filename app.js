@@ -1,5 +1,5 @@
 import { startButton, squares, scoreTable } from "./board.js";
-import { gameOver, pauseGame, pause } from "./utilities.js";
+import { gameOver, pauseGame, fpsCounter } from "./utilities.js";
 import { Game } from "./Game.js";
 
 // Game setup
@@ -16,7 +16,7 @@ function gameLoop(currentTime) {
   }
   game.lastTime = currentTime;
   game.reqAnimationId = requestAnimationFrame(gameLoop);
-  if (!pause) {
+  if (!game.pause) {
     // Collision check is here twice on purpose - once after moving pac-man and
     // once after moving the ghosts, because they move at different speeds.
     pacman.movePacman();
@@ -69,17 +69,4 @@ if (!game.gameStarted)
 startButton.addEventListener("click", startGame);
 
 // FPS meter
-let startTime = Date.now();
-let frame = 0;
-
-function tick() {
-  let time = Date.now();
-  frame++;
-  if (time - startTime > 1000) {
-    console.log((frame / ((time - startTime) / 1000)).toFixed(1));
-    startTime = time;
-    frame = 0;
-  }
-  window.requestAnimationFrame(tick);
-}
-tick();
+fpsCounter();
