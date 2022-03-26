@@ -9,6 +9,7 @@ export class Game {
     this.lastTime = null;
     this.reqAnimationId = null;
     this.gameWin = false;
+    this.gameStarted = false;
     this.score = 0;
     this.powerPelletTimer = null;
     this.dotCount = countDots();

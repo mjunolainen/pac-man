@@ -7,7 +7,7 @@ export function pauseGame(ev) {
   if (ev.code === "Space") {
     pause = !pause;
   }
-  if (!pause && !gameOverBool) {
+  if (!pause && !gameOverBool && game.gameStarted) {
     startButton.classList.add("hide");
   }
 }

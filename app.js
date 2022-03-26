@@ -16,7 +16,6 @@ function gameLoop(currentTime) {
   }
   game.lastTime = currentTime;
   game.reqAnimationId = requestAnimationFrame(gameLoop);
-
   if (!pause) {
     // Collision check is here twice on purpose - once after moving pac-man and
     // once after moving the ghosts, because they move at different speeds.
@@ -53,6 +52,7 @@ function gameLoop(currentTime) {
 }
 
 function startGame() {
+  game.gameStarted = true;
   pacman.setupPacman();
   ghosts.forEach((ghost) => {
     ghost.setupGhost();
@@ -60,9 +60,11 @@ function startGame() {
   startButton.classList.add("hide");
   window.requestAnimationFrame(gameLoop);
 }
-
+// First event listener prevents the page from moving up and down with the default keypress.
+document.addEventListener("keydown", (keypress) => keypress.preventDefault());
 document.addEventListener("keyup", (e) => pacman.handleKeyInput(e));
-document.addEventListener("keyup", (ev) => pauseGame(ev));
+if (!game.gameStarted)
+  document.addEventListener("keydown", (ev) => pauseGame(ev));
 
 startButton.addEventListener("click", startGame);
 

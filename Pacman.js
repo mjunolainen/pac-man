@@ -31,7 +31,7 @@ export class Pacman {
 
   movePacman() {
     if (this.shouldMove()) {
-      if (this.checkObstruction(this.keyDirection)) {
+      if (this.checkObstruction()) {
         squares[this.position].classList.remove("pac-man");
         squares[this.position].style.transform = `rotate(0deg)`;
         this.changePositionDirection(this.keyDirection, this.rotation);
@@ -48,35 +48,39 @@ export class Pacman {
       if (!e.repeat) {
         switch (e.code) {
           case "ArrowLeft":
-            e.preventDefault();
-            this.keyDirection = -1;
-            this.rotation = 180;
-            if (this.checkObstruction()) {
-              this.direction = this.position + this.keyDirection;
+            if (this.checkKeyPressObstruction(-1)) {
+              this.keyDirection = -1;
+              this.rotation = 180;
+              if (this.checkObstruction()) {
+                this.direction = this.position + this.keyDirection;
+              }
             }
             break;
           case "ArrowUp":
-            e.preventDefault();
-            this.keyDirection = -WIDTH;
-            this.rotation = 270;
-            if (this.checkObstruction()) {
-              this.direction = this.position + this.keyDirection;
+            if (this.checkKeyPressObstruction(-WIDTH)) {
+              this.keyDirection = -WIDTH;
+              this.rotation = 270;
+              if (this.checkObstruction()) {
+                this.direction = this.position + this.keyDirection;
+              }
             }
             break;
           case "ArrowRight":
-            e.preventDefault();
-            this.keyDirection = +1;
-            this.rotation = 0;
-            if (this.checkObstruction()) {
-              this.direction = this.position + this.keyDirection;
+            if (this.checkKeyPressObstruction(+1)) {
+              this.keyDirection = +1;
+              this.rotation = 0;
+              if (this.checkObstruction()) {
+                this.direction = this.position + this.keyDirection;
+              }
             }
             break;
           case "ArrowDown":
-            e.preventDefault();
-            this.keyDirection = +WIDTH;
-            this.rotation = 90;
-            if (this.checkObstruction()) {
-              this.direction = this.position + this.keyDirection;
+            if (this.checkKeyPressObstruction(+WIDTH)) {
+              this.keyDirection = +WIDTH;
+              this.rotation = 90;
+              if (this.checkObstruction()) {
+                this.direction = this.position + this.keyDirection;
+              }
             }
             break;
         }
@@ -90,6 +94,14 @@ export class Pacman {
     return (
       !squares[this.position + this.keyDirection].classList.contains("wall") &&
       !squares[this.position + this.keyDirection].classList.contains(
+        "ghost-lair"
+      )
+    );
+  }
+  checkKeyPressObstruction(keyPressDirection) {
+    return (
+      !squares[this.position + keyPressDirection].classList.contains("wall") &&
+      !squares[this.position + keyPressDirection].classList.contains(
         "ghost-lair"
       )
     );
