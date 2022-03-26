@@ -1,6 +1,6 @@
 import { startButton, squares, scoreTable } from "./board.js";
-import { gameOver, pauseGame, fpsCounter } from "./utilities.js";
 import { Game } from "./Game.js";
+import { fpsCounter } from "./utilities.js";
 
 // Game setup
 export let game = new Game();
@@ -37,7 +37,7 @@ function gameLoop(currentTime) {
 
     if (game.dotCount === 0) {
       game.gameWin = true;
-      gameOver(pacman, game.reqAnimationId);
+      game.gameOver();
     }
 
     scoreTable.textContent = String(game.score);
@@ -64,7 +64,7 @@ function startGame() {
 document.addEventListener("keydown", (keypress) => keypress.preventDefault());
 document.addEventListener("keyup", (e) => pacman.handleKeyInput(e));
 if (!game.gameStarted)
-  document.addEventListener("keydown", (ev) => pauseGame(ev));
+  document.addEventListener("keydown", (ev) => game.pauseGame(ev));
 
 startButton.addEventListener("click", startGame);
 

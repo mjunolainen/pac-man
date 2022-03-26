@@ -1,4 +1,4 @@
-import { countDots, createBoard, squares, startButton } from "./board.js";
+import { countDots, createBoard, gameGrid, startButton } from "./board.js";
 import { POWER_PELLET_TIME } from "./setup.js";
 import { Pacman } from "./Pacman.js";
 import { Ghost } from "./Ghost.js";
@@ -31,7 +31,37 @@ export class Game {
     );
   };
 
-  resetGame() {
+  pauseGame(ev) {
+    if (ev.code === "Space") {
+      this.pause = !this.pause;
+    }
+    if (!this.pause && !this.gameOverBool && this.gameStarted) {
+      startButton.classList.add("hide");
+    }
+  }
+
+  gameOver() {
+    this.gameOverBool = true;
+    window.cancelAnimationFrame(this.reqAnimationId);
+    this.showGameStatus(this.gameWin);
+    startButton.classList.remove("hide");
+    startButton.textContent = "New game?";
+    startButton.addEventListener(
+      "click",
+      window.location.reload.bind(window.location)
+    );
+  }
+
+  showGameStatus() {
+    const div = document.createElement("div");
+    div.classList.add("game-status");
+    div.innerHTML = `${this.gameWin ? `YOU WON!` : `GAME OVER!`}`;
+    gameGrid.appendChild(div);
+  }
+
+  /*resetGame() {
+    scoreTable.textContent = String(this.score);
+    startButton.textContent = "Start game";
     for (const square of squares) {
       if (square.classList.contains("pac-man")) {
         square.classList.remove("pac-man");
@@ -48,5 +78,5 @@ export class Game {
         );
       }
     }
-  }
+  }*/
 }

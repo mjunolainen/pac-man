@@ -1,6 +1,5 @@
 import { WIDTH } from "./setup.js";
 import { squares } from "./board.js";
-import { gameOver } from "./utilities.js";
 import { game } from "./app.js";
 
 export class Pacman {
@@ -133,7 +132,7 @@ export class Pacman {
             `${ghost.name}`
           );
         });
-        gameOver(this, frameId);
+        game.gameOver(this, frameId);
       }
     }
   }
