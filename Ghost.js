@@ -1,5 +1,6 @@
 import { WIDTH } from "./setup.js";
 import { squares } from "./board.js";
+import { fps, gameSpeed } from "./utilities.js";
 
 export class Ghost {
   constructor(speed = 2, startPosition, name) {
@@ -18,11 +19,11 @@ export class Ghost {
 
   // Determine if the ghost should move based on the input speed
   shouldMove() {
-    if (this.timer === this.speed) {
+    if (this.timer >= fps) {
       this.timer = 0;
       return true;
     }
-    this.timer++;
+    this.timer+= fps/gameSpeed;
     return false;
   }
 

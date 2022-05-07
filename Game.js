@@ -2,6 +2,7 @@ import { countDots, createBoard, gameGrid, startButton } from "./board.js";
 import { POWER_PELLET_TIME } from "./setup.js";
 import { Pacman } from "./Pacman.js";
 import { Ghost } from "./Ghost.js";
+import {resetTimer, startTimer} from "./utilities.js";
 
 export class Game {
   constructor() {
@@ -15,7 +16,8 @@ export class Game {
     this.score = 0;
     this.powerPelletTimer = null;
     this.dotCount = countDots();
-    this.pacman = new Pacman(20, 657);
+    //this.pacman = new Pacman(20, 657);
+    this.pacman = new Pacman(657);
     this.ghosts = [
       new Ghost(12, 347, "blinky"),
       new Ghost(11, 376, "inky"),
@@ -36,11 +38,14 @@ export class Game {
       this.pause = !this.pause;
     }
     if (!this.pause && !this.gameOverBool && this.gameStarted) {
+      startTimer()
       startButton.classList.add("hide");
     }
   }
 
   gameOver() {
+    document.getElementById("lives").innerText = ''
+    resetTimer()
     this.gameOverBool = true;
     window.cancelAnimationFrame(this.reqAnimationId);
     this.showGameStatus(this.gameWin);
@@ -58,25 +63,4 @@ export class Game {
     div.innerHTML = `${this.gameWin ? `YOU WON!` : `GAME OVER!`}`;
     gameGrid.appendChild(div);
   }
-
-  /*resetGame() {
-    scoreTable.textContent = String(this.score);
-    startButton.textContent = "Start game";
-    for (const square of squares) {
-      if (square.classList.contains("pac-man")) {
-        square.classList.remove("pac-man");
-        square.style.transform = `rotate(0deg)`;
-      }
-      if (square.classList.contains("ghost")) {
-        square.classList.remove(
-          "ghost",
-          "scared",
-          "blinky",
-          "inky",
-          "pinky",
-          "clyde"
-        );
-      }
-    }
-  }*/
 }

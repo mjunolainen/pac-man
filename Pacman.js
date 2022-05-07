@@ -1,11 +1,13 @@
 import { WIDTH } from "./setup.js";
 import { squares } from "./board.js";
 import { game } from "./app.js";
+import { fps, gameSpeed } from "./utilities.js";
 
 export class Pacman {
-  constructor(speed, startPosition) {
+  // constructor(speed, startPosition) {
+  constructor(startPosition) {
     this.position = startPosition;
-    this.speed = speed;
+    //this.speed = speed;
     this.direction = null;
     this.keyDirection = null;
     this.timer = 0;
@@ -20,12 +22,15 @@ export class Pacman {
   // Determine if a key has been pressed at the beginning of the game or
   // if pac-man should move based on the input speed
   shouldMove() {
-    if (!this.direction) return;
-    if (this.timer === this.speed) {
+    if (!this.direction) this.movePacman;
+    // return true;
+    // if (this.timer === this.speed) {
+    if (this.timer >= fps) {
       this.timer = 0;
       return true;
     }
-    this.timer++;
+    this.timer += fps/gameSpeed;
+    return false;
   }
 
   movePacman() {
@@ -91,7 +96,7 @@ export class Pacman {
 
   checkObstruction() {
     return (
-      !squares[this.position + this.keyDirection].classList.contains("wall") &&
+      !squares[(this.position + this.keyDirection)].classList.contains("wall") &&
       !squares[this.position + this.keyDirection].classList.contains(
         "ghost-lair"
       )
@@ -107,6 +112,7 @@ export class Pacman {
   }
 
   changePositionDirection() {
+    // this.position += this.keyDirection / FPS();
     this.position += this.keyDirection;
     this.direction = this.position + this.keyDirection;
   }

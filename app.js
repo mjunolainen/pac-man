@@ -1,6 +1,6 @@
 import { startButton, squares, scoreTable } from "./board.js";
 import { Game } from "./Game.js";
-import { fpsCounter } from "./utilities.js";
+import {fpsCounter, pauseTimer, startTimer} from "./utilities.js";
 
 // Game setup
 export let game = new Game();
@@ -42,6 +42,7 @@ function gameLoop(currentTime) {
 
     scoreTable.textContent = String(game.score);
   } else {
+    pauseTimer()
     startButton.textContent = "New game?";
     startButton.classList.remove("hide");
     startButton.addEventListener(
@@ -52,6 +53,7 @@ function gameLoop(currentTime) {
 }
 
 function startGame() {
+  startTimer()
   game.gameStarted = true;
   pacman.setupPacman();
   ghosts.forEach((ghost) => {

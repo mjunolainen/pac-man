@@ -16,6 +16,15 @@ body {
   justify-content: center;
 }
 
+#metrics {
+  width: 30rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 #game-grid {
   position: relative;
   display: inline-grid;
@@ -26,6 +35,21 @@ body {
   border-top: 6px inset rgba(255, 255, 255, 0.5);
   grid-template-columns: repeat(28, 20px);
   grid-template-rows: repeat(30, 20px);
+}
+#timer {
+  align-self: flex-start;
+  font-family: "VT323", monospace;
+  color: #a4bd33;
+  font-size: 1.5rem;
+  position: absolute;
+}
+
+#lives {
+  align-self: flex-end;
+  font-family: "VT323", monospace;
+  color: red;
+  font-size: 2rem;
+  position: absolute;
 }
 
 #score-board {
